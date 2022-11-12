@@ -48,7 +48,9 @@ class CharList extends Component {
             return (
                 <li
                     className="char__item"
-                    key={item.id}>
+                    key={item.id}
+                    onClick={() => this.props.onCharSelected(item.id)}
+                    >
                     <img src={item.thumbnail} alt={item.name} style={imgStyle} />
                     <div className="char__name">{item.name}</div>
                 </li>
@@ -65,17 +67,16 @@ class CharList extends Component {
     render() {
 
         const { charList, loading, error } = this.state;
-
         const items = this.renderItems(charList);
 
         const errorMessage = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
         const content = !(loading || error) ? items : null;
-
+        
         return (
             <div className="char__list">
                 {errorMessage}
-                {spinner}
+                {spinner} 
                 {content}
                 <button className="button button__main button__long">
                     <div className="inner">load more</div>
