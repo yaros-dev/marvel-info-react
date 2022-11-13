@@ -1,14 +1,14 @@
 import { Component } from 'react/cjs/react.development';
 import './charInfo.scss';
+import MarvelService from '../../services/MarvelService';
 import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelService from '../../services/MarvelService';
 import Skeleton from '../skeleton/Skeleton';
 
 class CharInfo extends Component {
 
     state = {
-        charInfo: {},
+        charInfo: null,
         loading: false,
         error: false
     }
@@ -17,6 +17,12 @@ class CharInfo extends Component {
 
     componentDidMount() {
         this.updateCharInfo();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.charId !== prevProps.charId) {
+            this.updateCharInfo();
+        }
     }
 
     onCharLoading = () => {
@@ -45,6 +51,7 @@ class CharInfo extends Component {
             return;
         }
         this.onCharLoading();
+
         this.marvelService
             .getCharacter(charId)
             .then(this.onCharLoaded)
@@ -53,12 +60,15 @@ class CharInfo extends Component {
 
     render() {
         const { charInfo, loading, error } = this.state;
+
+        const skeleton = charInfo || loading || error ? null : <Skeleton />;
         const errorMessage = error ? <ErrorMessage /> : null;
         const spinner = loading ? <Spinner /> : null;
-        const content = !(loading || error) ? <View char={charInfo} /> : null
+        const content = !(loading || error || !charInfo) ? <View char={charInfo} /> : null
 
         return (
             <div className="char__info">
+                {skeleton}
                 {errorMessage}
                 {spinner}
                 {content}
@@ -68,30 +78,17 @@ class CharInfo extends Component {
 }
 
 const View = ({ char }) => {
+
     const { name, description, thumbnail, homepage, wiki, comics } = char;
-    const isImgChar = thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? true : false;
-    const classNamesImgChar = `randomchar__img ${isImgChar && 'randomchar__not-img'} `;
-
-    getComics = (items) => {
-        const res = items.map((item) => {
-            return (
-                <li className="char__comics-item">
-                    {item.name}
-                </li>
-            )
-        });
-
-        return (
-            <ul className="char__comics-list">
-                {res}
-            </ul>
-        )
+    let imgStyle = { 'objectFit': 'cover' };
+    if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+        imgStyle = { 'objectFit': 'unset' };
     }
 
-    return ( 
+    return (
         <>
             <div className="char__basics">
-                <img src={thumbnail} alt="abyss" className={classNamesImgChar} />
+                <img src={thumbnail} alt={name} style={imgStyle} />
                 <div>
                     <div className="char__info-name">{name}</div>
                     <div className="char__btns">
@@ -106,8 +103,19 @@ const View = ({ char }) => {
             </div>
             <div className="char__descr">{description} </div>
             <div className="char__comics">Comics:</div>
-            { }
-            <div/>
+            <ul className="char__comics-list">
+                {comics.length > 0 ? null : 'There is no comics with this character'}
+                {
+                    comics.map((item, i) => {
+                        if (i > 9) return;
+                        return (
+                            <li key={i} className="char__comics-item">
+                              {item.name}  
+                            </li> 
+                        )
+                    })
+                }
+            </ul>
         </>
     )
 }
