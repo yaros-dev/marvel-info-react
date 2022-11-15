@@ -1,6 +1,5 @@
-import {
-    Component
-} from 'react';
+import { Component } from 'react';
+import { PropTypes } from 'prop-types';
 import './charList.scss';
 import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -8,6 +7,7 @@ import MarvelService from '../../services/MarvelService';
 
 
 class CharList extends Component {
+ 
 
     state = {
         charList: [],
@@ -25,11 +25,9 @@ class CharList extends Component {
     // }
 
     
-   componentDidMount() {
-      if (this.state.offset < 219) {
+   componentDidMount() { 
          this.onRequest();
-      }
-      window.addEventListener("scroll", this.onScroll);
+       window.addEventListener("scroll", this.onScroll);
    }
  
    componentWillUnmount() {
@@ -139,6 +137,10 @@ class CharList extends Component {
     }
 
 
+}
+
+CharList.propTypes = {
+    onCharSelected: PropTypes.func.isRequired
 }
 
 
