@@ -1,5 +1,6 @@
-import { Component } from 'react';
+import { Component, React } from 'react';
 import { PropTypes } from 'prop-types';
+
 import './charList.scss';
 import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -19,10 +20,6 @@ class CharList extends Component {
     }
 
     marvelService = new MarvelService();
-
-    // componentDidMount() {
-    //     this.onRequest();
-    // }
 
     
    componentDidMount() { 
@@ -81,9 +78,21 @@ class CharList extends Component {
             loading: false
         })
     }
+
+    itemRefs = [];
+
+    setRef = (ref) => {
+        this.itemRefs.push(ref);
+    }
+
+    focusOnItem = (id) => { 
+        this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+        this.itemRefs[id].classList.add('char__item_selected');
+        this.itemRefs[id].focus();
+    }
  
     renderItems(arr) {
-        const items = arr.map((item) => {
+        const items = arr.map((item, index) => {
             let imgStyle = {
                 'objectFit': 'cover'
             };
@@ -94,9 +103,23 @@ class CharList extends Component {
             }
 
             return (
-                <li className="char__item"
+                
+                <li className={`char__item  `}
+                    ref={this.setRef}
                     key={item.id}
-                    onClick={() => this.props.onCharSelected(item.id)} >
+                    tabIndex={index}
+                    onClick={() => { 
+                        this.props.onCharSelected(item.id);
+                        this.focusOnItem(index);
+                    }}
+                    onKeyPress={(e) => {
+                        if (e.key === ' ' || e.key === "Enter") {
+                            this.props.onCharSelected(item.id);
+                            this.focusOnItem(index);
+                        }
+                    }}
+                    >
+                    
                     <img src={item.thumbnail}
                         alt={item.name}
                         style={imgStyle} />
