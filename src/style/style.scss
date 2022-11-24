@@ -2,12 +2,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
 @import './button';
 
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
 * {
     font-family: "Roboto Condensed", sans-serif;
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    padding: 0; 
+    border: 0px;
+}  
+ 
 
 ul,
 li,
@@ -54,10 +61,20 @@ input::-webkit-inner-spin-button {
     position: relative;
     .bg-decoration {
         position: absolute;
-        right: -174px;
+        right: -40px;
         bottom: -70px;
         z-index: -1;
+        @media (max-width: 1190px) {
+            & {
+                display: none;
+            }
+        }
     }
+}
+
+.container {
+    max-width: 1440px;
+    margin: 0 auto;
 }
 
 main {

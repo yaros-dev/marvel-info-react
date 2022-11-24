@@ -8,35 +8,37 @@ import ErrorBoudary from "../errorBoudary/ErrorBoudary";
 import decoration from '../../resources/img/vision.png';
 
 class App extends Component {
-    
+
     state = {
-        selectedChar: null, 
+        selectedChar: null,
     }
 
     onCharSelected = (id) => {
         this.setState({
-            selectedChar: id, 
+            selectedChar: id,
         })
     }
 
     render() {
         return (
-            <div className="app">
-                <AppHeader />
-                <main>
-                    <ErrorBoudary>
-                        <RandomChar />
-                    </ErrorBoudary>
-                    <div className="char__content">
+            <div className="container">
+                <div className="app">
+                    <AppHeader />
+                    <main>
                         <ErrorBoudary>
-                            <CharList onCharSelected={this.onCharSelected} />
+                            <RandomChar />
                         </ErrorBoudary>
-                        <ErrorBoudary>
-                            <CharInfo charId={this.state.selectedChar} />
-                        </ErrorBoudary>
-                    </div>
-                    <img className="bg-decoration" src={decoration} alt="vision" />
-                </main>
+                        <div className="char__content">
+                            <ErrorBoudary>
+                                <CharList onCharSelected={this.onCharSelected} />
+                            </ErrorBoudary>
+                            <ErrorBoudary>
+                                <CharInfo charId={this.state.selectedChar} />
+                            </ErrorBoudary>
+                        </div>
+                        <img className="bg-decoration" src={decoration} alt="vision" />
+                    </main>
+                </div>
             </div>
         )
     }

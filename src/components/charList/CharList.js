@@ -101,10 +101,10 @@ class CharList extends Component {
                     'objectFit': 'unset'
                 };
             }
-
+ 
             return (
                 
-                <li className={`char__item  `}
+                <li className={`char__item`}
                     ref={this.setRef}
                     key={item.id}
                     tabIndex={index}
@@ -113,6 +113,7 @@ class CharList extends Component {
                         this.focusOnItem(index);
                     }}
                     onKeyPress={(e) => {
+                        e.preventDefault();
                         if (e.key === ' ' || e.key === "Enter") {
                             this.props.onCharSelected(item.id);
                             this.focusOnItem(index);
