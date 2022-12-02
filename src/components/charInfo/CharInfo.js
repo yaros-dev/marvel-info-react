@@ -1,4 +1,4 @@
-import { Component }  from 'react'; 
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './charInfo.scss';
 import MarvelService from '../../services/MarvelService';
@@ -6,83 +6,68 @@ import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
 
-class CharInfo extends Component {
+const CharInfo = (props) => {
 
-    state = {
-        charInfo: null,
-        loading: false,
-        error: false
-    }
+    const [charInfo, setCharInfo] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-    marvelService = new MarvelService();
 
-    componentDidMount() {
-        this.updateCharInfo();
-    }
-
-    componentDidUpdate(prevProps) {
-        if (this.props.charId !== prevProps.charId) {
-            this.updateCharInfo();
-        }
-    }
+    const marvelService = new MarvelService();
  
 
-    onCharLoading = () => {
-        this.setState({
-            loading: true
-        });
-    }
+    useEffect(() => { 
+            updateCharInfo(); 
+    }, [props.charId])
 
-    onCharLoaded = (charInfo) => {
-        this.setState({
-            charInfo,
-            loading: false
-        })
-    }
 
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-        })
-    }
-
-    updateCharInfo = () => {
-        const { charId } = this.props;
-        if (!charId) {     
+    const updateCharInfo = () => {
+        const { charId } = props;
+        if (!charId) {
             return;
         }
-        this.onCharLoading();
-
-        this.marvelService
+        onCharLoading();
+        marvelService
             .getCharacter(charId)
-            .then(this.onCharLoaded)
-            .catch(this.onError)
-         
+            .then(onCharLoaded)
+            .catch(onError)
+
     }
 
-    render() {
-        const { charInfo, loading, error } = this.state;
 
-        const skeleton = charInfo || loading || error ? null : <Skeleton />;
-        const errorMessage = error ? <ErrorMessage /> : null;
-        const spinner = loading ? <Spinner /> : null;
-        const content = !(loading || error || !charInfo) ? <View char={charInfo} /> : null
-
-        return (
-            <div className="char__info">
-                {skeleton}
-                {errorMessage}
-                {spinner}
-                {content}
-            </div>
-        )
+    const onCharLoaded = (charInfo) => {
+        setLoading(false);
+        setCharInfo(charInfo);
     }
+
+    const onCharLoading = () => {
+        setLoading(true);
+    }
+
+    const onError = () => {
+        setError(true);
+        setLoading(false);
+    }
+
+
+    const skeleton = charInfo || loading || error ? null : <Skeleton />;
+    const errorMessage = error ? <ErrorMessage /> : null;
+    const spinner = loading ? <Spinner /> : null;
+    const content = !(loading || error || !charInfo) ? <View char={charInfo} /> : null
+
+    return (
+        <div className="char__info">
+            {skeleton}
+            {errorMessage}
+            {spinner}
+            {content}
+        </div>
+    )
+
 }
 
-const View = ({ char }) => {
-
-    const { name, description, thumbnail, homepage, wiki, comics } = char;
+const View = ({ char }) => { 
+    const { name, description, thumbnail, homepage, wiki, comics} = char;
     let imgStyle = { 'objectFit': 'cover' };
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
         imgStyle = { 'objectFit': 'unset' };
@@ -114,8 +99,8 @@ const View = ({ char }) => {
                         if (i > 9) return;
                         return (
                             <li key={i} className="char__comics-item" >
-                              {item.name}  
-                            </li> 
+                                {item.name}
+                            </li>
                         )
                     })
                 }
