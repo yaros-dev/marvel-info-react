@@ -68,8 +68,7 @@ const CharList = (props) => {
         itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
         itemRefs.current[id].classList.add('char__item_selected');
         itemRefs.current[id].focus();
-    }
-
+    } 
     function renderItems(arr) {
         const items = arr.map((item, index) => {
             let imgStyle = {
@@ -79,10 +78,8 @@ const CharList = (props) => {
                 imgStyle = {
                     'objectFit': 'unset'
                 };
-            }
-
-            return (
-
+            } 
+            return ( 
                 <li className={`char__item`}
                     ref={el => itemRefs.current[index] = el}
                     key={item.id}
@@ -97,8 +94,7 @@ const CharList = (props) => {
                             props.onCharSelected(item.id);
                             focusOnItem(index);
                         }
-                    }}
-                >
+                    }} >
 
                     <img src={item.thumbnail}
                         alt={item.name}
@@ -112,9 +108,7 @@ const CharList = (props) => {
         return (
             <ul className="char__grid" > {items} </ul>
         )
-    }
-
-
+    } 
     const items = renderItems(charList);
     const errorMessage = error ? < ErrorMessage /> : null;
     const spinner = loading ? < Spinner /> : null;
@@ -133,15 +127,11 @@ const CharList = (props) => {
                 <div className="inner" > load more </div>
             </button>
         </div>
-    )
-
-
-
+    ) 
 }
 
 CharList.propTypes = {
     onCharSelected: PropTypes.func.isRequired
-}
-
+} 
 
 export default CharList;
