@@ -6,14 +6,12 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoudary from "../errorBoudary/ErrorBoudary";
 import decoration from '../../resources/img/vision.png';
-
-
-
+import ComicsList from "../comicsList/ComicsList";
+import AppBanner from "../appBanner/AppBanner";
 
 const App = () => {
 
-    const [selectedChar, setChar] = useState(null);
-
+    const [selectedChar, setChar] = useState(null); 
     const onCharSelected = (id) => {
         setChar(id);
     }
@@ -23,7 +21,9 @@ const App = () => {
             <div className="app">
                 <AppHeader />
                 <main>
-                    <ErrorBoudary>
+                    {/* <AppBanner/> */}
+                    <ComicsList/>
+                    {/* <ErrorBoudary>
                         <RandomChar />
                     </ErrorBoudary>
                     <div className="char__content">
@@ -34,7 +34,7 @@ const App = () => {
                             <CharInfo charId={selectedChar} />
                         </ErrorBoudary>
                     </div>
-                    <img className="bg-decoration" src={decoration} alt="vision" />
+                    <img className="bg-decoration" src={decoration} alt="vision" /> */}
                 </main>
             </div>
         </div>

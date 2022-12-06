@@ -4,62 +4,37 @@ import { PropTypes } from 'prop-types';
 import './charList.scss';
 import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 
 
 const CharList = (props) => {
 
     const [charList, setCharList] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-    const [newItemLoading, setNewItemLoading] = useState(true);
-    const [offset, setOffset] = useState(240);
+    const [newItemLoading, setNewItemLoading] = useState(false);
+    const [offset, setOffset] = useState(210);
     const [charEnded, setCharEnded] = useState(false);
-    const [isEnd, setIsEnd] = useState(false);
 
-    const marvelService = new MarvelService();
-
-    useEffect(() => {
-        window.addEventListener('scroll', onScroll);
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
+    const { loading, error, getAllCharacters } = useMarvelService();
 
     useEffect(() => {
-        if (newItemLoading && !isEnd) {
-            onRequest();
-        }
-    }, [newItemLoading])
+        onRequest(offset, true);
+    }, [])
 
-    const onScroll = (event) => {
-        if ( window.innerHeight + window.pageYOffset >= document.body.offsetHeight ) {
-            setNewItemLoading(true);
-        }
-    };
+    const onRequest = (offset, initial) => {
+        initial ? setNewItemLoading(false) : setNewItemLoading(true);
+        getAllCharacters(offset)
+            .then(onCharListLoaded)
+    }
 
-    const onRequest = () => {
-        onCharactersLoading();
-        marvelService.getAllCharacters(offset)
-            .then(onCharactersLoaded)
-            .catch(onError)
-            .finally(() => setNewItemLoading(false));
-    };
-
-
-    const onCharactersLoading = () => {
-        setNewItemLoading(true);
-    };
-
-    const onCharactersLoaded = (newCharList) => {
-        setCharList((charList) => [...charList, ...newCharList]);
-        setLoading(false);
-        setError(false);
-        setOffset((offset) => offset + 9);
-        setIsEnd(newCharList.length < 9 ? true : false);
-    };
-
-    const onError = () => {
-        setError(true);
-        setLoading(false);
+    const onCharListLoaded = (newCharList) => {
+        let ended = false;
+        if (newCharList.length < 9) {
+            ended = true;
+        } 
+        setCharList(charList => [...charList, ...newCharList]);
+        setNewItemLoading(newItemLoading => false);
+        setOffset(offset => offset + 9);
+        setCharEnded(charEnded => ended);
     }
 
     const itemRefs = useRef([]);
@@ -68,7 +43,7 @@ const CharList = (props) => {
         itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
         itemRefs.current[id].classList.add('char__item_selected');
         itemRefs.current[id].focus();
-    } 
+    }
     function renderItems(arr) {
         const items = arr.map((item, index) => {
             let imgStyle = {
@@ -78,8 +53,8 @@ const CharList = (props) => {
                 imgStyle = {
                     'objectFit': 'unset'
                 };
-            } 
-            return ( 
+            }
+            return (
                 <li className={`char__item`}
                     ref={el => itemRefs.current[index] = el}
                     key={item.id}
@@ -104,21 +79,20 @@ const CharList = (props) => {
                 </li>
             )
         });
-        // А эта конструкция вынесена для центровки спиннера/ошибки
         return (
             <ul className="char__grid" > {items} </ul>
         )
-    } 
+    }
     const items = renderItems(charList);
-    const errorMessage = error ? < ErrorMessage /> : null;
-    const spinner = loading ? < Spinner /> : null;
-    const content = !(loading || error) ? items : null;
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading && !newItemLoading ? <Spinner/> : null;
+    
 
     return (
         <div className="char__list" >
             {errorMessage}
             {spinner}
-            {content}
+            {items} 
             <button
                 className="button button__main button__long"
                 disabled={newItemLoading}
@@ -127,11 +101,11 @@ const CharList = (props) => {
                 <div className="inner" > load more </div>
             </button>
         </div>
-    ) 
+    )
 }
 
 CharList.propTypes = {
     onCharSelected: PropTypes.func.isRequired
-} 
+}
 
 export default CharList;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './charInfo.scss';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton';
@@ -9,15 +9,12 @@ import Skeleton from '../skeleton/Skeleton';
 const CharInfo = (props) => {
 
     const [charInfo, setCharInfo] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+
+    const { loading, error, getCharacter, clearError } = useMarvelService();
 
 
-    const marvelService = new MarvelService();
- 
-
-    useEffect(() => { 
-            updateCharInfo(); 
+    useEffect(() => {
+        updateCharInfo();
     }, [props.charId])
 
 
@@ -25,28 +22,15 @@ const CharInfo = (props) => {
         const { charId } = props;
         if (!charId) {
             return;
-        }
-        onCharLoading();
-        marvelService
-            .getCharacter(charId)
+        } 
+        clearError();
+        getCharacter(charId)
             .then(onCharLoaded)
-            .catch(onError)
 
     }
-
 
     const onCharLoaded = (charInfo) => {
-        setLoading(false);
         setCharInfo(charInfo);
-    }
-
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-
-    const onError = () => {
-        setError(true);
-        setLoading(false);
     }
 
 
@@ -66,8 +50,8 @@ const CharInfo = (props) => {
 
 }
 
-const View = ({ char }) => { 
-    const { name, description, thumbnail, homepage, wiki, comics} = char;
+const View = ({ char }) => {
+    const { name, description, thumbnail, homepage, wiki, comics } = char;
     let imgStyle = { 'objectFit': 'cover' };
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
         imgStyle = { 'objectFit': 'unset' };
