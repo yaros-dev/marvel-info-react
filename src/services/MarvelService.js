@@ -48,6 +48,8 @@ const useMarvelService = () => {
         }
     }
 
+    
+
     const _transformComics = (comics) => {
         return {
             id: comics.id,

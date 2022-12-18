@@ -1,9 +1,9 @@
 @import '../../style/variables.scss';
 
-.app {
+.app { 
     &__header {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-between; 
     }
     &__title {
         font-weight: bold;
@@ -24,7 +24,7 @@
                 margin: 0 8px;
                 a:hover {
                     color: $main-color;
-                }
+                } 
             }
         }
     }
