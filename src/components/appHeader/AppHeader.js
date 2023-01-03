@@ -12,12 +12,14 @@ const AppHeader = () => {
             <nav className="app__menu">
                 <ul>
                     <li><NavLink
+                        end
                         to='/'
                         style={({ isActive }) => { return { color: isActive ? '#9f0013' : '' } }} >
                         Characters
                         </NavLink></li>
                     /
                     <li><NavLink
+                        end
                         to='/comics'
                         style={({ isActive }) => { return { color: isActive ? '#9f0013' : '' } }}>
                         Comics
