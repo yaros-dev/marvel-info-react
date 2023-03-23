@@ -1,4 +1,6 @@
-import { useHttp } from "../hooks/http.hook";
+import {
+    useHttp
+} from "../hooks/http.hook";
 
 const useMarvelService = () => {
 
@@ -12,6 +14,11 @@ const useMarvelService = () => {
     const _apiBase = 'https://gateway.marvel.com:443/v1/public/';
     const _apiKey = 'apikey=28e52b5c26573c02fab9570ed0bbb5c6';
     const _baseOffset = 210;
+
+    const getCharacterByName = async (name) => {
+        const res = await request(`${_apiBase}characters?name=${name}&${_apiKey}`);
+        return res.data.results.map(_transformCharacter);
+    };
 
     const getAllCharacters = async (offset = _baseOffset) => {
         const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
@@ -46,7 +53,7 @@ const useMarvelService = () => {
         }
     }
 
-    
+
 
     const _transformComics = (comics) => {
         return {
@@ -64,6 +71,7 @@ const useMarvelService = () => {
         loading,
         error,
         getAllCharacters,
+        getCharacterByName,
         getCharacter,
         clearError,
         getAllComics,

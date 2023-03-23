@@ -5,7 +5,7 @@ import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import ErrorBoudary from "../errorBoudary/ErrorBoudary";
 import decoration from '../../resources/img/vision.png';
-
+import FindChar from '../findChar/FindChar';
 
 
 
@@ -26,9 +26,14 @@ const MainPage = () => {
                 <ErrorBoudary>
                     <CharList onCharSelected={onCharSelected} />
                 </ErrorBoudary>
-                <ErrorBoudary>
-                    <CharInfo charId={selectedChar} />
-                </ErrorBoudary>
+                <div>
+                    <ErrorBoudary>
+                        <CharInfo charId={selectedChar} />
+                    </ErrorBoudary>
+                    <ErrorBoudary>
+                        <FindChar />
+                    </ErrorBoudary>
+                </div>
             </div>
             <img className="bg-decoration" src={decoration} alt="vision" />
         </>

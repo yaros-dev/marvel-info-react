@@ -1,6 +1,6 @@
 import { React, useState, useEffect, useRef } from 'react';
 import { PropTypes } from 'prop-types';
-
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './charList.scss';
 import Spinner from '../Spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -27,11 +27,11 @@ const CharList = (props) => {
     }
 
     const onCharListLoaded = (newCharList) => {
-  
+
         let ended = false;
         if (newCharList.length < 9) {
             ended = true;
-        } 
+        }
         setCharList(charList => [...charList, ...newCharList]);
         setNewItemLoading(newItemLoading => false);
         setOffset(offset => offset + 9);
@@ -56,43 +56,49 @@ const CharList = (props) => {
                 };
             }
             return (
-                <li className={`char__item`}
-                    ref={el => itemRefs.current[index] = el}
-                    key={item.id}
-                    tabIndex={index}
-                    onClick={() => {
-                        props.onCharSelected(item.id);
-                        focusOnItem(index);
-                    }}
-                    onKeyPress={(e) => {
-                        e.preventDefault();
-                        if (e.key === ' ' || e.key === "Enter") {
+
+                <CSSTransition key={item.id} timeout={500} classNames="char__item" >
+                    <li className='char__item'
+                        ref={el => itemRefs.current[index] = el}
+                        tabIndex={index}
+                        onClick={() => {
                             props.onCharSelected(item.id);
                             focusOnItem(index);
-                        }
-                    }} >
+                        }}
+                        onKeyPress={(e) => {
+                            e.preventDefault();
+                            if (e.key === ' ' || e.key === "Enter") {
+                                props.onCharSelected(item.id);
+                                focusOnItem(index);
+                            }
+                        }} >
 
-                    <img src={item.thumbnail}
-                        alt={item.name}
-                        style={imgStyle} />
-                    <div className="char__name" > {item.name}
-                    </div>
-                </li>
+                        <img src={item.thumbnail}
+                            alt={item.name}
+                            style={imgStyle} />
+                        <div className="char__name" > {item.name}
+                        </div>
+                    </li>
+                </CSSTransition>
             )
         });
         return (
-            <ul className="char__grid" > {items} </ul>
+            <ul className="char__grid" >
+                <TransitionGroup component={null}>
+                    {items}
+                </TransitionGroup>
+            </ul>
         )
     }
     const items = renderItems(charList);
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading ? <Spinner/> : null;
+    const errorMessage = error ? <ErrorMessage /> : null;
+    const spinner = loading && !newItemLoading ? <Spinner /> : null;
 
     return (
         <div className="char__list" >
             {errorMessage}
             {spinner}
-            {items} 
+            {items}
             <button
                 className="button button__main button__long"
                 disabled={newItemLoading}
