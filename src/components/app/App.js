@@ -12,6 +12,7 @@ const SingleCharacterLayout = lazy(() => import('../pages/singleCharacterLayout/
 const SinglePage = lazy(() => import('../pages/SinglePage'));
 
 
+
 const App = () => {
 
     return (
