@@ -14,6 +14,7 @@ const SinglePage = ({ Component, dataType }) => {
 
     useEffect(() => {
         updateData()
+        // react-hooks/exhaustive-deps
     }, [id])
 
     const updateData = () => {
@@ -25,6 +26,9 @@ const SinglePage = ({ Component, dataType }) => {
                 break;
             case 'character':
                 getCharacter(id).then(onDataLoaded);
+                break;
+            default:
+                break;
         }
     }
 
