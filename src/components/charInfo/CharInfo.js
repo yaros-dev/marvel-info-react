@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import './charInfo.scss';
 import useMarvelService from '../../services/MarvelService';
