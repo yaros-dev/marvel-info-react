@@ -5,9 +5,7 @@ import {
 const useMarvelService = () => {
 
     const {
-        loading,
         request,
-        error,
         clearError,
         process,
         setProcess
@@ -70,8 +68,6 @@ const useMarvelService = () => {
     }
 
     return {
-        loading,
-        error,
         process,
         setProcess,
         getAllCharacters,
