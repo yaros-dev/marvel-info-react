@@ -9,7 +9,7 @@ const CharInfo = (props) => {
 
     const [charInfo, setCharInfo] = useState(null);
     const [show, setShow] = useState(false);
-    const { loading, error, getCharacter, clearError, process, setProcess } = useMarvelService();
+    const { getCharacter, clearError, process, setProcess } = useMarvelService();
 
 
     useEffect(() => {
