@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { CSSTransition } from 'react-transition-group';
 import PropTypes from 'prop-types';
 import './charInfo.scss';
 import useMarvelService from '../../services/MarvelService';
@@ -12,7 +11,7 @@ const CharInfo = (props) => {
 
     const [charInfo, setCharInfo] = useState(null);
     const [show, setShow] = useState(false);
-    const { loading, error, getCharacter, clearError } = useMarvelService();
+    const { loading, error, getCharacter, clearError, process, setProcess } = useMarvelService();
 
 
     useEffect(() => {
@@ -26,10 +25,13 @@ const CharInfo = (props) => {
         if (!charId) {
             return;
         }
+
+
         clearError();
         setShow(false);
         getCharacter(charId)
             .then(onCharLoaded)
+            .then(() => setProcess('confirmed'))
 
     }
 
@@ -38,29 +40,36 @@ const CharInfo = (props) => {
         setShow(true);
     }
 
+    const setContent = (process, charInfo) => {
+        switch (process) {
+            case 'waiting':
+                return <Skeleton />;
+                break;
+            case 'loading':
+                return <Spinner />;
+                break;
+            case 'confirmed':
+                return <View char={charInfo} />;
+                break;
+            case 'error':
+                return <ErrorMessage />;
+                break;
+            default:
+                throw new Error('Unexpected process state')
+                break;
+        }
+    }
 
 
-
-
-
-    const skeleton = charInfo || loading || error ? null : <Skeleton />;
-    const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner /> : null;
-    const content = !(loading || error || !charInfo) ? <View char={charInfo} /> : null
+    // const skeleton = charInfo || loading || error ? null : <Skeleton />;
+    // const errorMessage = error ? <ErrorMessage /> : null;
+    // const spinner = loading ? <Spinner /> : null;
+    // const content = !(loading || error || !charInfo) ? <View char={charInfo} /> : null
 
     return (
 
         <div className="char__info">
-            {skeleton}
-            {errorMessage}
-            {spinner}
-
-            <CSSTransition in={show} timeout={300} classNames="char" unmountOnExit>
-                <>
-                    {content}
-                </>
-            </CSSTransition>
-
+            {setContent(process, charInfo)}
         </div>
 
     )
