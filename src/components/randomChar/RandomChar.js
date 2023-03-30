@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import Spinner from '../Spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
@@ -10,7 +8,7 @@ const RandomChar = () => {
 
     const [char, setChar] = useState({});
 
-    const { loading, error, getCharacter, clearError, process, setProcess } = useMarvelService();
+    const { getCharacter, clearError, process, setProcess } = useMarvelService();
 
     useEffect(() => {
         updateChar();
