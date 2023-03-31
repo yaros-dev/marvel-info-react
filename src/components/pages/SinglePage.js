@@ -12,7 +12,7 @@ const SinglePage = ({ Component, dataType }) => {
 
     useEffect(() => {
         updateData()
-        // react-hooks/exhaustive-deps
+        // eslint-disable-next-line
     }, [id])
 
     const updateData = () => {

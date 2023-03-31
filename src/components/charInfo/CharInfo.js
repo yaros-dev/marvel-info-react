@@ -23,8 +23,6 @@ const CharInfo = (props) => {
         if (!charId) {
             return;
         }
-
-
         clearError();
         setShow(false);
         getCharacter(charId)
@@ -35,7 +33,7 @@ const CharInfo = (props) => {
 
     const onCharLoaded = (charInfo) => {
         setCharInfo(charInfo);
-        setShow(true);
+        setShow(!show);
     }
 
 
